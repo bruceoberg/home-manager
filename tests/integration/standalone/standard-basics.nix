@@ -15,12 +15,21 @@
         password = "foobar";
         uid = 1000;
       };
+      
+      # Add DNS configuration
+      networking.nameservers = [ "8.8.8.8" "1.1.1.1" ];
+      networking.useDHCP = false;
+      networking.interfaces.eth1.useDHCP = true;
     };
 
   testScript = ''
     start_all()
     machine.wait_for_unit("network.target")
     machine.wait_for_unit("multi-user.target")
+
+    # Wait for network to actually be ready with DNS
+    machine.wait_until_succeeds("ping -c 1 8.8.8.8")
+    machine.wait_until_succeeds("getent hosts cache.nixos.org")
 
     home_manager = "${../../..}"
 
