@@ -16,4 +16,4 @@ jobs:
       
       - name: Run tests
         run: |
-          nix build --reference-lock-file flake.lock --option allow-import-from-derivation false --print-build-logs ./tests#integration-test-standalone-standard-basics
+          nix build --reference-lock-file flake.lock --option substitute false --option allow-import-from-derivation false --print-build-logs ./tests#integration-test-standalone-standard-basics
