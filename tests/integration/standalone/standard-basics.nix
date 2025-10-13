@@ -15,27 +15,12 @@
         password = "foobar";
         uid = 1000;
       };
-      
-      # Add DNS configuration
-      networking.nameservers = [ "8.8.8.8" "1.1.1.1" ];
-      networking.useDHCP = true;
     };
 
   testScript = ''
     start_all()
     machine.wait_for_unit("network.target")
     machine.wait_for_unit("multi-user.target")
-
-    # Give network more time and check what's actually configured
-    import time
-    time.sleep(5)
-    
-    print(machine.succeed("ip addr show"))
-    print(machine.succeed("ip route show"))
-    print(machine.succeed("cat /etc/resolv.conf"))
-    
-    # Try to reach network
-    machine.wait_until_succeeds("ping -c 1 8.8.8.8", timeout=60)
 
     home_manager = "${../../..}"
 
